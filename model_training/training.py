@@ -4,6 +4,7 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
+import keras
 
 IMAGE_SIZE = 32  # px
 BATCH_SIZE = 16
@@ -64,7 +65,7 @@ model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy',
               optimizer=Adam(learning_rate=0.0005, use_ema=True),
-              metrics=['accuracy'])
+              metrics=['accuracy', keras.metrics.FalsePositives])
 
 model.summary()
 model.fit(train_data,
