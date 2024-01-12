@@ -8,7 +8,9 @@ Number of valid and test files are chosen according to parameters:
 valid_split
 test_split
 
-Original mrlEyes_2018_01 dataset download: http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
+Get original dataset:
+wget http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
+unzip mrlEyes_2018_01.zip
 """
 
 import os

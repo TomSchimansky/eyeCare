@@ -2,7 +2,8 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
-from keras.callbacks import Callback
+from keras.callbacks import ModelCheckpoint
+from keras.optimizers import Adam
 
 IMAGE_SIZE = 32  # px
 BATCH_SIZE = 16
@@ -28,7 +29,7 @@ model.add(Dense(1))
 model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy',
-              optimizer='adam',
+              optimizer=Adam(learning_rate=0.0005, use_ema=True),
               metrics=['accuracy'])
 
 model.summary()
@@ -60,10 +61,16 @@ validation_data = datagenerator.flow_from_directory("mrlEyes_open_closed/valid",
                                                     subset="training",
                                                     class_mode="binary")
 
+cp_callback = ModelCheckpoint(filepath=f"checkpoints/model_{IMAGE_SIZE}_{{epoch:03d}}-{{val_accuracy:.3f}}.hdf5",
+                              monitor='val_accuracy',
+                              verbose=1,
+                              save_best_only=True,
+                              mode='max')
+
 model.fit(train_data,
           steps_per_epoch=train_data.samples // BATCH_SIZE,
-          epochs=15,
+          epochs=50,
           validation_data=validation_data,
           validation_steps=validation_data.samples // BATCH_SIZE,
-          callbacks=[])
+          callbacks=[cp_callback])
 model.save('trained_models/eye_blink_3_32x.h5')
