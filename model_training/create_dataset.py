@@ -1,80 +1,99 @@
-import shutil
+"""
+Copy images of mrlEyes_2018_01 into mrlEyes_open_closed and split into the following directories:
+train/open, train/closed
+valid/open, valid/closed
+test/open, test/closed
 
-from config import *
+Number of valid and test files are chosen according to parameters:
+valid_split
+test_split
 
+Original mrlEyes_2018_01 dataset download: http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
+"""
 
-class DataLoader(object):
-    """ MRL Eye Dataset:
-    In the dataset, we collected the data of 37 different persons (33 men and 4 women)
+import os
+import math
+from PIL import Image
 
-    explanation of file names: data/mrlEyes_2018_01/annotations.txt """
-
-    def __init__(self):
-        self.file_names_list = []
-        self.main_path = ROOT_DIR
-        self.path_to_orig_data = ""
-        self.new_dataset_folder = self.main_path + "/data/mrlEyes_2018_01"
-
-        print(self.main_path)
-        print(self.new_dataset_folder)
-
-    def separate_open_closed(self):
-        """ needs to be called only once to split images from MRL-Dataset
-        into open and closed eyes folders """
-
-        entries = os.scandir(self.path_to_orig_data)
-        for directory in entries:
-            if directory.is_dir():
-                sub_entries = os.scandir(directory.path)
-                for file in sub_entries:
-                    if file.is_file() and file.name.endswith(".png"):
-                        self.file_names_list.append(file.path)
-
-        try:
-            os.mkdir(self.new_dataset_folder + "/train/closed")
-            os.mkdir(self.new_dataset_folder + "/train/open")
-        except FileExistsError:
-            pass
-
-        for file_name_path in self.file_names_list:
-            file_name = file_name_path.split("/")[-1]
-            raw_file_name = file_name.split(".")[0]
-            raw_file_name_parts = raw_file_name.split("_")
-
-            if raw_file_name_parts[4] == "0":
-                shutil.copy(file_name_path, self.new_dataset_folder + "/train/closed")
-            elif raw_file_name_parts[4] == "1":
-                shutil.copy(file_name_path, self.new_dataset_folder + "/train/open")
-
-    def seperate_train_validation(self, number_of_validation_images):
-        """ moves given number of images from train folder to validation folder """
-
-        # images = os.listdir(self.new_dataset_folder + "/validation")
-        # for image in images:
-        #     if "closed" in image and "png" in image:
-        #         shutil.move(self.new_dataset_folder + "/validation/" + image,
-        #                     self.new_dataset_folder + "/train/closed/" + image.replace("closed", ""))
-        #     if "open" in image and "png" in image:
-        #         shutil.move(self.new_dataset_folder + "/validation/" + image,
-        #                     self.new_dataset_folder + "/train/open/" + image.replace("open", ""))
-
-        try:
-            os.mkdir(self.new_dataset_folder + "/validation/closed")
-            os.mkdir(self.new_dataset_folder + "/validation/open")
-        except FileExistsError:
-            pass
-
-        closed_images = os.listdir(self.new_dataset_folder + "/train/closed")
-        open_images = os.listdir(self.new_dataset_folder + "/train/open")
-        for image in closed_images[-number_of_validation_images:]:
-            shutil.move(self.new_dataset_folder + "/train/closed/" + image,
-                        self.new_dataset_folder + "/validation/closed/" + image)
-
-        for image in open_images[-number_of_validation_images:]:
-            shutil.move(self.new_dataset_folder + "/train/open/" + image,
-                        self.new_dataset_folder + "/validation/open/" + image)
+valid_split = 0.02
+test_split = 0.08
+mrlEyes_2018_01_path = "./mrlEyes_2018_01"  # original dataset
+mrlEyes_open_closed_path = "./mrlEyes_open_closed"  # new dataset
+mrlEyes_open_closed_resolution = 64  # px
 
 
-if __name__ == "__main__":
-    data = DataLoader()
-    data.seperate_train_validation(3000)
+def create_folder_if_not_exists(path):
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        pass
+
+# create folders
+create_folder_if_not_exists(mrlEyes_open_closed_path)
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/train")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/valid")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/test")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/train/open")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/train/closed")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/valid/open")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/valid/closed")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/test/open")
+create_folder_if_not_exists(mrlEyes_open_closed_path + "/test/closed")
+
+# create list of all image files in original dataset
+file_names_list = []
+for directory in os.scandir(mrlEyes_2018_01_path):
+    if directory.is_dir():
+        sub_entries = os.scandir(directory.path)
+        for file in sub_entries:
+            if file.is_file() and file.name.endswith(".png"):
+                file_names_list.append(file.path)
+
+# separate open and closed eye images
+file_names_list_open = []
+file_names_list_closed = []
+for file_name_path in file_names_list:
+    file_name = file_name_path.split("/")[-1]
+    raw_file_name = file_name.split(".")[0]
+    raw_file_name_parts = raw_file_name.split("_")
+
+    if raw_file_name_parts[4] == "0":
+        file_names_list_closed.append(file_name_path)
+    elif raw_file_name_parts[4] == "1":
+        file_names_list_open.append(file_name_path)
+
+print(f"mrlEyes_2018_01 images: {len(file_names_list)}")
+print(f"mrlEyes_2018_01 images open: {len(file_names_list_open)}")
+print(f"mrlEyes_2018_01 images closed: {len(file_names_list_closed)}")
+
+# calculate number of images
+number_of_image_per_class = min(len(file_names_list_open), len(file_names_list_closed))
+number_of_image_per_class_test = math.floor(number_of_image_per_class * test_split)
+number_of_image_per_class_valid = math.floor(number_of_image_per_class * valid_split)
+number_of_image_per_class_train = number_of_image_per_class - number_of_image_per_class_test - number_of_image_per_class_valid
+
+print(f"mrlEyes_open_closed train: {number_of_image_per_class_train * 2}")
+print(f"mrlEyes_open_closed valid: {number_of_image_per_class_valid * 2}")
+print(f"mrlEyes_open_closed test: {number_of_image_per_class_test * 2}")
+
+
+def resize_and_copy_image(image_path, destination_folder, resolution):
+    image = Image.open(image_path)
+    image = image.resize((resolution, resolution))
+    image.save(os.path.join(destination_folder, os.path.basename(image_path)))
+
+
+# load, resize and save images to new folders
+for i, (image_path_open, image_path_closed) in enumerate(zip(file_names_list_open, file_names_list_closed)):
+    if i < number_of_image_per_class_train:  # train
+        resize_and_copy_image(image_path_open, mrlEyes_open_closed_path + "/train/open", mrlEyes_open_closed_resolution)
+        resize_and_copy_image(image_path_closed, mrlEyes_open_closed_path + "/train/closed", mrlEyes_open_closed_resolution)
+
+    elif i < number_of_image_per_class_train + number_of_image_per_class_valid:  # valid
+        resize_and_copy_image(image_path_open, mrlEyes_open_closed_path + "/valid/open", mrlEyes_open_closed_resolution)
+        resize_and_copy_image(image_path_closed, mrlEyes_open_closed_path + "/valid/closed", mrlEyes_open_closed_resolution)
+
+    else:  # test
+        resize_and_copy_image(image_path_open, mrlEyes_open_closed_path + "/test/open", mrlEyes_open_closed_resolution)
+        resize_and_copy_image(image_path_closed, mrlEyes_open_closed_path + "/test/closed", mrlEyes_open_closed_resolution)
+
