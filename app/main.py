@@ -3,6 +3,7 @@ import tkinter.messagebox
 import customtkinter
 import sys
 import json
+import time
 
 from app_ui.start_view import StartView
 from app_ui.loading_view import LoadingView
@@ -125,7 +126,21 @@ class App(tkinter.Tk):
                 self.loading_view_start.set_loading_status(self.eye_analyzer.loading_status)
             else:
                 self.main_view.main_frame.update_info_data(self.eye_analyzer.get_average_blink_time())
-                self.main_view.update_eye_analyzer_data()
+
+                if self.eye_analyzer.time_of_last_blink is None:
+                    self.main_view.main_frame.set_eyes_closed()
+                    self.main_view.main_frame.time_bar.set(1)
+                    self.sound_thread.set_volume(0)
+                else:
+                    time_since_last_blink = time.time() - self.eye_analyzer.time_of_last_blink
+                    if time_since_last_blink < self.max_time_setting:
+                        self.main_view.main_frame.set_eyes_open()
+                        self.main_view.main_frame.time_bar.set(1 - (time_since_last_blink / self.max_time_setting))
+                        self.sound_thread.set_volume(0)
+                    elif time_since_last_blink > self.max_time_setting:
+                        self.main_view.main_frame.set_eyes_open()
+                        self.main_view.main_frame.time_bar.set(0)
+                        self.sound_thread.set_volume(self.volume_setting)
 
             self.update()
             customtkinter.update_theme()

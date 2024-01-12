@@ -43,12 +43,6 @@ class MainFrame(customtkinter.CTkFrame):
                                                         text="Durchschn. Zeit: - sek")
         self.average_time_text.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-        #self.data_2_text = customtkinter.CTkLabel(master=self.data_frame,
-        #                                          fg_color=customtkinter.Color.FRAME_2,
-        #                                          width=165,
-        #                                          text="Info Angabe: - sek")
-        #self.data_2_text.place(relx=1.0, rely=0.5, anchor=tkinter.E)
-
         self.eye_canvas = customtkinter.CTkFrame(master=self,
                                                  width=350,
                                                  height=100)

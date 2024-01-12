@@ -12,7 +12,7 @@ class InfoView(tkinter.Frame):
         self.color_manager = master.color_manager
 
         self.return_button = customtkinter.CTkButton(master=self,
-                                                     text="zurück",
+                                                     text="back",
                                                      command=lambda: self.app_pointer.show_view("MainView"))
         self.return_button.place(relx=0.05, rely=0.05, anchor=tkinter.NW)
 
