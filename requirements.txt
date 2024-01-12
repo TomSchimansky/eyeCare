@@ -1,0 +1,8 @@
+opencv-python~=4.5.1.48
+numpy~=1.19.5
+pyaudio~=0.2.11
+pillow~=8.1.0
+darkdetect~=0.1.1
+keras~=2.4.3
+tensorflow~=2.4.1
+dlib~=19.21.1
