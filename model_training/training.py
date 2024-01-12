@@ -43,11 +43,11 @@ cp_callback = ModelCheckpoint(filepath=f"checkpoints/model_{IMAGE_SIZE}_{{epoch:
                               mode='max')
 
 model = Sequential()
-model.add(Conv2D(64, (4, 4), padding="valid", input_shape=(IMAGE_SIZE, IMAGE_SIZE, 1)))
+model.add(Conv2D(64, (5, 5), padding="valid", input_shape=(IMAGE_SIZE, IMAGE_SIZE, 1)))
 model.add(Activation('softplus'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(128, (3, 3), padding="valid"))
+model.add(Conv2D(128, (4, 4), padding="valid"))
 model.add(Activation('softplus'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
