@@ -7,35 +7,7 @@ from .customtkinter_entry import CTkEntry
 from .appearance_mode_tracker import AppearanceModeTracker, SystemAppearanceModeListenerNoThread
 from .customtkinter_color_manager import CTkColorManager as Color
 
-from distutils.version import StrictVersion as Version
-import tkinter
-import os
 import sys
-
-
-def enable_macos_darkmode():
-    if sys.platform == "darwin":  # macOS
-        if Version(tkinter.Tcl().call("info", "patchlevel")) >= Version("8.6.9"):  # Tcl/Tk >= 8.6.9
-            os.system("defaults write -g NSRequiresAquaSystemAppearance -bool No")
-
-            sys.stderr.write("WARNING (customtkinter.enable_macos_darkmode): " +
-                             "This command forces macOS dark-mode on all programs. " +
-                             "This can cause bugs on some other programs.\n" +
-                             "Disable it by calling customtkinter.disable_macos_darkmode at the end of the program\n")
-        else:
-            sys.stderr.write("WARNING (customtkinter.enable_macos_darkmode): " +
-                             "Currently this works only with anaconda python version (Tcl/Tk >= 8.6.9)\n" +
-                             "(python.org Tcl/Tk version is only 8.6.8)\n")
-    else:
-        sys.stderr.write("WARNING (customtkinter.enable_macos_darkmode): " +
-                         "System is not macOS, but the following: {}\n".format(sys.platform))
-
-
-def disable_macos_darkmode():
-    if sys.platform == "darwin":  # macOS
-        if Version(tkinter.Tcl().call("info", "patchlevel")) >= Version("8.6.9"):  # Tcl/Tk >= 8.6.9
-            os.system("defaults delete -g NSRequiresAquaSystemAppearance")
-            # This command reverts the dark-mode setting for all programs.
 
 
 def set_appearance_mode(mode_string):

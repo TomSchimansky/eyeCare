@@ -3,23 +3,21 @@ import tkinter.messagebox
 import customtkinter
 import sys
 import json
-from settings import Settings
+
+from app_ui.start_view import StartView
+from app_ui.loading_view import LoadingView
+from app_ui.main_view import MainView
+from app_ui.settings_view import SettingsView
+from app_ui.info_view import InfoView
 
 from app_analyzing.timing import Timer
-
-from app_ui_views.start_view import StartView
-from app_ui_views.loading_view import LoadingView
-from app_ui_views.main_view import MainView
-from app_ui_views.settings_view import SettingsView
-from app_ui_views.info_view import InfoView
-
 from app_analyzing.eye_analyzer import EyeAnalyzer
-from app_analyzing.sound_thread import SoundThread
+from app_analyzing.sound_generator import SoundGenerator
+from settings import Settings
 
 
 class App(tkinter.Tk):
     def __init__(self, *args, **kwargs):
-        customtkinter.enable_macos_darkmode()
         customtkinter.deactivate_threading()
         tkinter.Tk.__init__(self, *args, **kwargs)
 
@@ -31,11 +29,7 @@ class App(tkinter.Tk):
         self.title(Settings.APP_NAME)
         self.geometry(str(Settings.DEFAULT_WIDTH) + "x" + str(Settings.DEFAULT_HEIGHT))
 
-        if sys.platform == "darwin":  # macOS
-            self.bind("<Command-q>", self.on_closing)
-            self.bind("<Command-w>", self.on_closing)
-
-        elif "win" in sys.platform:  # Windows
+        if "win" in sys.platform:  # Windows
             self.bind("<Alt-Key-F4>", self.on_closing)
 
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -54,8 +48,7 @@ class App(tkinter.Tk):
         self.running = False
 
         self.main_view = MainView(self)
-        self.loading_view_start = LoadingView(self,
-                                              call_when_ready=lambda: self.show_view("MainView"))
+        self.loading_view_start = LoadingView(self, call_when_ready=lambda: self.show_view("MainView"))
         self.start_view = StartView(self)
         self.settings_view = SettingsView(self)
         self.info_view = InfoView(self)
@@ -68,7 +61,7 @@ class App(tkinter.Tk):
         self.views.append(self.info_view)
 
         self.eye_analyzer = EyeAnalyzer()
-        self.sound_thread = SoundThread()
+        self.sound_thread = SoundGenerator()
         self.sound_thread.start()
 
         self.timer = Timer(Settings.FPS)
@@ -112,14 +105,12 @@ class App(tkinter.Tk):
 
     def on_closing(self, event=0):
         self.write_user_settings_to_file()
-        customtkinter.disable_macos_darkmode()
         self.eye_analyzer.stop()
         self.running = False
 
     def start(self):
         self.running = True
 
-        # load settings
         self.read_user_settings_from_file()
         self.settings_view.scroll_settings_frame.set_volume_setting(self.volume_setting)
         self.settings_view.scroll_settings_frame.set_time_setting(self.max_time_setting)

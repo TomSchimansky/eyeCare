@@ -25,7 +25,6 @@ train_data = train_datagenerator.flow_from_directory("mrlEyes_open_closed/train"
                                                      target_size=(IMAGE_SIZE, IMAGE_SIZE),
                                                      batch_size=BATCH_SIZE,
                                                      color_mode="grayscale",
-                                                     subset="training",
                                                      class_mode="binary",
                                                      shuffle=True)
 
@@ -34,7 +33,6 @@ validation_data = valid_datagenerator.flow_from_directory("mrlEyes_open_closed/v
                                                           target_size=(IMAGE_SIZE, IMAGE_SIZE),
                                                           batch_size=BATCH_SIZE,
                                                           color_mode="grayscale",
-                                                          subset="training",
                                                           class_mode="binary")
 
 cp_callback = ModelCheckpoint(filepath=f"checkpoints/model_{IMAGE_SIZE}_{{epoch:03d}}-{{val_accuracy:.3f}}.hdf5",
@@ -65,7 +63,9 @@ model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy',
               optimizer=Adam(learning_rate=0.0005, use_ema=True),
-              metrics=['accuracy', keras.metrics.Precision(), keras.metrics.Recall()]),
+              metrics=['accuracy',
+                       keras.metrics.Precision(),
+                       keras.metrics.Recall()])
 
 model.summary()
 model.fit(train_data,

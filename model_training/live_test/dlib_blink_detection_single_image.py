@@ -3,12 +3,10 @@ import dlib
 import keras
 import numpy as np
 
-from config import *
-
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(ROOT_DIR + "/dlib_models/shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor("../dlib_models/shape_predictor_68_face_landmarks.dat")
 
-model = keras.models.load_model(ROOT_DIR + '/trained_models/eye_blink_3_32x.h5')
+model = keras.models.load_model("../trained_models/eye_blink_3_32x.h5")
 
 image = cv2.imread('image.jpeg')
 image = cv2.resize(image, (1024, 1024))
@@ -16,7 +14,6 @@ image_gray = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2GRAY)
 
 faces = detector(image_gray)
 for face in faces:
-
     landmarks = predictor(image=image_gray, box=face)
 
     def get_eye_box_from_landmarks(landmarks, n1, n2):

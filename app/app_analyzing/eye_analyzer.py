@@ -2,9 +2,11 @@ import cv2
 import numpy as np
 import threading
 import time
+import keras
+import dlib
 from settings import Settings
-from app_analyzing.cv2_camera import Cv2Camera
-from app_analyzing.timing import StopWatch
+from .cv2_camera import Cv2Camera
+from .timing import StopWatch
 
 
 class EyeAnalyzer(threading.Thread):
@@ -17,13 +19,12 @@ class EyeAnalyzer(threading.Thread):
     IMAGE_SIZE = 32  # eye crop pixel size
     EYE_BOX_SIZE_FACTOR = 1.2  # margin around eye when cropping
     NUMBER_OF_BLACKOUTS_TILL_RESET = 3  # time_of_last_blink will switch to None after it
-    THRESHOLD_FOR_BLINK_DETECTION = 0.4  # between 0-1
+    THRESHOLD_FOR_BLINK_DETECTION = 0.6  # between 0-1
     LONGEST_POSSIBLE_BLINK_TIME = 0.5  # shorter blinks don't raise the counter
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.setDaemon(True)
+        self.daemon = True
 
         self.face_detector = None
         self.face_68_shape_detector = None
@@ -43,22 +44,13 @@ class EyeAnalyzer(threading.Thread):
     def load(self):
         self.camera = Cv2Camera(self.X_RESOLUTION, self.Y_RESOLUTION)
         self.loading_status = 0.1
-
-        import dlib
-        self.loading_status = 0.2
-
-        import keras
-        self.loading_status = 0.6
-
         self.face_detector = dlib.get_frontal_face_detector()
-        self.loading_status = 0.8
-
+        self.loading_status = 0.3
         self.face_68_shape_detector = dlib.shape_predictor(Settings.MAIN_PATH
                                                            + "/ml_models/dlib/shape_predictor_68_face_landmarks.dat")
-        self.loading_status = 0.9
-
+        self.loading_status = 0.7
         self.eye_blink_keras_model = keras.models.load_model(Settings.MAIN_PATH
-                                                             + '/ml_models/tensorflow/eye_blink_3_32x.h5')
+                                                             + '/ml_models/tensorflow/model_32_012-0.989.hdf5')
         self.loading_status = 1.0
 
     @staticmethod
@@ -74,7 +66,7 @@ class EyeAnalyzer(threading.Thread):
     @property
     def time_since_last_blink(self):
         if self.time_of_last_blink is not None:
-            return time.time()-self.time_of_last_blink
+            return time.time() - self.time_of_last_blink
         else:
             return None
 
@@ -145,13 +137,13 @@ class EyeAnalyzer(threading.Thread):
                         eye_region_2 = cv2.resize(eye_region_2, (self.IMAGE_SIZE, self.IMAGE_SIZE)) / 255
 
                         # create input batch for keras model
-                        image_batch = np.zeros(self.IMAGE_SIZE * self.IMAGE_SIZE * 2).reshape(2, self.IMAGE_SIZE, self.IMAGE_SIZE, 1)
+                        image_batch = np.zeros(self.IMAGE_SIZE * self.IMAGE_SIZE * 2).reshape((2, self.IMAGE_SIZE, self.IMAGE_SIZE, 1))
                         image_batch[0] = eye_region_1.reshape(self.IMAGE_SIZE, self.IMAGE_SIZE, 1)
                         image_batch[1] = eye_region_2.reshape(self.IMAGE_SIZE, self.IMAGE_SIZE, 1)
 
                         # run keras eye blink detection model on batch
-                        out = self.eye_blink_keras_model.predict(image_batch, batch_size=2)
-                        if out[0][0] < self.THRESHOLD_FOR_BLINK_DETECTION and out[1][0] < self.THRESHOLD_FOR_BLINK_DETECTION:
+                        out = self.eye_blink_keras_model.predict(image_batch, batch_size=2, verbose=0)
+                        if out[0][0] > self.THRESHOLD_FOR_BLINK_DETECTION or out[1][0] > self.THRESHOLD_FOR_BLINK_DETECTION:
                             # eye blink detected
 
                             if self.time_of_last_blink is not None:

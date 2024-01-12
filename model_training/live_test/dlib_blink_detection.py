@@ -3,28 +3,28 @@ import dlib
 import keras
 import numpy as np
 
-from config import *
-from real_testing.sound_thread import SoundThread
+from sound_thread import SoundThread
 
+IMAGE_SIZE = 32
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(ROOT_DIR + "/dlib_models/shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor("../dlib_models/shape_predictor_68_face_landmarks.dat")
 
-model = keras.models.load_model(ROOT_DIR + '/trained_models/eye_blink_3_32x.h5')
+model = keras.models.load_model("../trained_models/model_32_012-0.989.hdf5")
 
-sound_thread = SoundThread(ROOT_DIR + "/real_testing/assets/sounds/ding.wav")
+sound_thread = SoundThread("ding.wav")
 sound_thread.start()
 
 camera = cv2.VideoCapture(0)
 
 while True:
-    ret, image = camera.read()
-    image = cv2.resize(image, (640, 360))
+    result, image = camera.read()
+    image = cv2.resize(image, (640, 480))
     image_gray = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2GRAY)
+    image_gray = cv2.convertScaleAbs(image_gray, alpha=1, beta=0)
 
     faces = detector(image_gray)
     for face in faces:
-
         landmarks = predictor(image=image_gray, box=face)
 
         # for n in range(0, 68):
@@ -51,12 +51,13 @@ while True:
         eye_region_1 = cv2.resize(eye_region_1, (IMAGE_SIZE, IMAGE_SIZE)) / 255
         eye_region_2 = cv2.resize(eye_region_2, (IMAGE_SIZE, IMAGE_SIZE)) / 255
 
-        image_batch = np.zeros(IMAGE_SIZE * IMAGE_SIZE * 2).reshape(2, IMAGE_SIZE, IMAGE_SIZE, 1)
+        image_batch = np.zeros(IMAGE_SIZE * IMAGE_SIZE * 2).reshape((2, IMAGE_SIZE, IMAGE_SIZE, 1))
         image_batch[0] = eye_region_1.reshape(IMAGE_SIZE, IMAGE_SIZE, 1)
         image_batch[1] = eye_region_2.reshape(IMAGE_SIZE, IMAGE_SIZE, 1)
 
-        out = model.predict(image_batch, batch_size=2)
-        if out[0][0] < 0.4 and out[1][0] < 0.4:
+        out = model.predict(image_batch, batch_size=2, verbose=0)
+        if out[0][0] > 0.6 or out[1][0] > 0.6:
+            print(out[0][0], out[1][0])
             sound_thread.play()
 
         cv2.imshow('Network input: eye_region_1/2', np.hstack((eye_region_1, eye_region_2)))
