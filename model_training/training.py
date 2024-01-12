@@ -5,34 +5,8 @@ from keras.layers import Activation, Dropout, Flatten, Dense
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
 
-IMAGE_SIZE = 32  # px
+IMAGE_SIZE = 64  # px
 BATCH_SIZE = 16
-
-model = Sequential()
-model.add(Conv2D(64, (5, 5), input_shape=(IMAGE_SIZE, IMAGE_SIZE, 1)))
-model.add(Activation('softplus'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Conv2D(128, (3, 3)))
-model.add(Activation('softplus'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Conv2D(256, (2, 2)))
-model.add(Activation('softplus'))
-
-model.add(Flatten())
-model.add(Dense(128, activation="softplus"))
-model.add(Dropout(0.3))
-model.add(Dense(32, activation="softplus"))
-model.add(Dropout(0.3))
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
-
-model.compile(loss='binary_crossentropy',
-              optimizer=Adam(learning_rate=0.0005, use_ema=True),
-              metrics=['accuracy'])
-
-model.summary()
 
 datagenerator = ImageDataGenerator(rotation_range=30,
                                    width_shift_range=0.1,
@@ -67,10 +41,34 @@ cp_callback = ModelCheckpoint(filepath=f"checkpoints/model_{IMAGE_SIZE}_{{epoch:
                               save_best_only=True,
                               mode='max')
 
+model = Sequential()
+model.add(Conv2D(64, (5, 5), input_shape=(IMAGE_SIZE, IMAGE_SIZE, 1)))
+model.add(Activation('softplus'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+model.add(Conv2D(128, (3, 3)))
+model.add(Activation('softplus'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+model.add(Conv2D(256, (2, 2)))
+model.add(Activation('softplus'))
+
+model.add(Flatten())
+model.add(Dense(128, activation="softplus"))
+model.add(Dropout(0.3))
+model.add(Dense(32, activation="softplus"))
+model.add(Dropout(0.3))
+model.add(Dense(1))
+model.add(Activation('sigmoid'))
+
+model.compile(loss='binary_crossentropy',
+              optimizer=Adam(learning_rate=0.0005),
+              metrics=['accuracy'])
+
+model.summary()
 model.fit(train_data,
           steps_per_epoch=train_data.samples // BATCH_SIZE,
           epochs=50,
           validation_data=validation_data,
           validation_steps=validation_data.samples // BATCH_SIZE,
           callbacks=[cp_callback])
-model.save('trained_models/eye_blink_3_32x.h5')
