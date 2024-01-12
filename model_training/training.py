@@ -65,7 +65,7 @@ model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy',
               optimizer=Adam(learning_rate=0.0005, use_ema=True),
-              metrics=['accuracy', keras.metrics.FalsePositives()])
+              metrics=['accuracy', keras.metrics.Precision(), keras.metrics.Recall()]),
 
 model.summary()
 model.fit(train_data,
