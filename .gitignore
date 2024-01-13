@@ -18,6 +18,8 @@ Temporary Items
 .env
 Thumbs.db
 *.pyc
+app/*.pyc
+app/__pycache__/*.pyc
 venv
 Desktop.ini
 
