@@ -50,10 +50,6 @@ while True:
     for face in faces:
         landmarks = predictor(image=image_gray, box=face)
 
-        # for n in range(0, 68):
-        #     x, y = landmarks.part(n).x, landmarks.part(n).y
-        #     cv2.circle(img=image, center=(x, y), radius=3, color=(0, 255, 0), thickness=-1)
-
         def get_eye_box_from_landmarks(landmarks, n1, n2):
             eye_width = round((landmarks.part(n2).x - landmarks.part(n1).x) * 1.2)
 
@@ -61,7 +57,6 @@ while True:
             eye1_y = round((landmarks.part(n1).y + landmarks.part(n2).y) / 2)
 
             return eye1_x, eye1_y, eye_width
-
 
         eye1_x, eye1_y, eye1_width = get_eye_box_from_landmarks(landmarks, 36, 39)
         eye_region_1 = image_gray[eye1_y-eye1_width:eye1_y+eye1_width,
