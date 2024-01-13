@@ -41,9 +41,9 @@ mrlEyes_open_closed/
 ```
 Download mrlEyes_2018_01 and create mrlEyes_open_closed dataset:
 ```
+cd model_training
 wget http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
 unzip mrlEyes_2018_01.zip
-cd model_training
 python create_dataset.py
 ```
 (Can take a few minutes)
@@ -81,7 +81,7 @@ The following architecture is used to classify 32x32 eye images (eye open: 0, ey
 Train CNN classifier model and copy best model to model_training/trained_models and app/ml_models/tensorflow:
 ```
 python training.py
-cd checkpoints
+cd model_training/checkpoints
 cp best_model.hdf5 ../trained_models
 cp best_model.hdf5 ../../app/assets/trained_models
 ```
