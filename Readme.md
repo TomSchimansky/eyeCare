@@ -118,6 +118,6 @@ python dlib_face_landmark_live_test.py
 
 <img src="documentation_images/dlib_face_landmark_live_test.png" width="500"/>
 
-For extraction of the eye regions landmarks 36, 39 and 42, 45 are used:
+For extraction of the eye regions the midpoints of landmarks 36, 39 and 42, 45 are used:
 
 <img src="documentation_images/Dlib_Face_Landmarks.png" width="500"/>
