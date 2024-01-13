@@ -4,7 +4,7 @@
   <img src="documentation_images/eyeCare_screenshot_1.png" width="600"/>
 </div>
 
-This is a prototype program for tackling eye strain caused by prolonged screen usage.
+This is a prototype program I created in 2018-2020 for tackling eye strain caused by prolonged screen usage.
 Problems like dry and itchy eyes are partially caused by a reduce blinking rate when staring on a screen,
 which this program tries to address by giving a sound signal when no blinking is detected for a
 certain time. For this, the program uses the webcam, detects the face, crops out the eye regions and runs
