@@ -4,11 +4,11 @@
   <img src="documentation_images/eyeCare_screenshot_1.png" width="600"/>
 </div>
 
-This is a prototype program I created in 2018-2020 for tackling eye strain caused by prolonged screen usage.
+This is a concept program I developed in 2018-2020 for tackling eye strain caused by prolonged screen usage.
 Problems like dry and itchy eyes are partially caused by a reduce blinking rate when staring on a screen,
-which this program tries to address by giving a sound signal when no blinking is detected for a
+which this program tries to fix by giving a subtle sound signal when no blinking is detected for a
 certain time. For this, the program uses the webcam, detects the face, crops out the eye regions and runs
-a classifier on the eye regions detecting an open or closed eye.
+a classifier on the eye regions detecting an open or closed eye in real time.
 
 ## Installation and usage
 
@@ -25,8 +25,21 @@ python app.py
 ```
 
 ## Dataset
-
-Download mrlEyes_2018_01 and create mrlEyes_open_closed dataset with images separated into train, vlaid and test folders with open and closed folders each:
+For training the classifier, a preprocessed version of the mrlEyes_2018_01 dataset is used, which can be created using `create_dataset.py`. The script will create
+a new folder called mrlEyes_open_closed with train, valid and test folders and images from the mrlEyes_2018_01 resized to 64x64:
+```
+mrlEyes_open_closed/
+├── train/
+│   ├── open/ (37753 files)
+│   └── closed/ (37753 files)
+├── valid/
+│   ├── open/ (838 files)
+│   └── closed/ (838 files)
+└── test/
+    ├── open/ (3355 files)
+    └── closed/ (3355 files)
+```
+Download mrlEyes_2018_01 and create mrlEyes_open_closed dataset:
 ```
 wget http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
 unzip mrlEyes_2018_01.zip
@@ -37,7 +50,7 @@ python create_dataset.py
 
 ## Model training
 
-The following architecture is used to classify 32x32 eye images:
+The following architecture is used to classify 32x32 eye images (eye open: 0, eye closed: 1):
 ```
        OPERATION           DATA DIMENSIONS   WEIGHTS(N)   WEIGHTS(%)
 
@@ -74,9 +87,16 @@ cp best_model.hdf5 ../../app/assets/trained_models
 ```
 (Training takes approximately 15 minutes for 50 epochs on Nvidia RTX3070)
 
-Evaluation on test dataset not used in training process:
+Evaluation on test dataset with images not used in training process:
 ```
 python evaluation.py
+```
+With above architecture the following metrics can be achieved on the valid dataset:
+```
+      Accuracy: 98.3 %
+     Precision: 97.9 %
+        Recall: 98.7 %
+False-Positive: 1.04 %
 ```
 
 ## Live evaluation of model:
@@ -90,13 +110,11 @@ python blink_detection_live_test.py
 <img src="documentation_images/blink_detection_live_test.png" width="500"/>
 
 
-A live demonstration of the Dlib face and landmark detector:
+The eye regions are cropped using the Dlib shape_predictor_68_face_landmarks.dat. A live demonstration of the Dlib face and landmark detector:
 ```
 cd model_training/live_test
 python dlib_face_landmark_live_test.py
 ```
-
-
 
 <img src="documentation_images/dlib_face_landmark_live_test.png" width="500"/>
 
