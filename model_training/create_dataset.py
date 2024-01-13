@@ -15,6 +15,7 @@ unzip mrlEyes_2018_01.zip
 
 import os
 import math
+import random
 from PIL import Image
 
 valid_split = 0.02
@@ -74,9 +75,9 @@ number_of_image_per_class_test = math.floor(number_of_image_per_class * test_spl
 number_of_image_per_class_valid = math.floor(number_of_image_per_class * valid_split)
 number_of_image_per_class_train = number_of_image_per_class - number_of_image_per_class_test - number_of_image_per_class_valid
 
-print(f"mrlEyes_open_closed train: {number_of_image_per_class_train * 2}")
-print(f"mrlEyes_open_closed valid: {number_of_image_per_class_valid * 2}")
-print(f"mrlEyes_open_closed test: {number_of_image_per_class_test * 2}")
+print(f"mrlEyes_open_closed train: {number_of_image_per_class_train}")
+print(f"mrlEyes_open_closed valid: {number_of_image_per_class_valid}")
+print(f"mrlEyes_open_closed test: {number_of_image_per_class_test}")
 
 
 def resize_and_copy_image(image_path, destination_folder, resolution):
@@ -98,4 +99,3 @@ for i, (image_path_open, image_path_closed) in enumerate(zip(file_names_list_ope
     else:  # test
         resize_and_copy_image(image_path_open, mrlEyes_open_closed_path + "/test/open", mrlEyes_open_closed_resolution)
         resize_and_copy_image(image_path_closed, mrlEyes_open_closed_path + "/test/closed", mrlEyes_open_closed_resolution)
-

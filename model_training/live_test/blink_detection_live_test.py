@@ -65,7 +65,6 @@ while True:
         eye2_x, eye2_y, eye2_width = get_eye_box_from_landmarks(landmarks, 42, 45)
         eye_region_2 = image_gray[eye2_y - eye2_width:eye2_y + eye2_width,
                                   eye2_x - eye2_width:eye2_x + eye2_width]
-        print(eye_region_1.shape, eye_region_2.shape)
 
         eye_region_1 = cv2.resize(eye_region_1, (IMAGE_SIZE, IMAGE_SIZE)) / 255
         eye_region_2 = cv2.resize(eye_region_2, (IMAGE_SIZE, IMAGE_SIZE)) / 255
