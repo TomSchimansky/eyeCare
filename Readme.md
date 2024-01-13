@@ -1,7 +1,12 @@
 # eyeCare
+
 <div align="center">
   <img src="documentation_images/eyeCare_screenshot_1.png" width="600"/>
 </div>
+
+This is a prototype program for tackling the Computer vision syndrome,
+which describes eye problems caused by prolonged screen usage like dry or itchy eyes.
+
 ## Installation and usage
 
 Create virtual environment and install libraries:
@@ -29,6 +34,7 @@ python create_dataset.py
 
 ## Model training
 
+The following architecture is used to classify 32x32 eye images:
 ```
        OPERATION           DATA DIMENSIONS   WEIGHTS(N)   WEIGHTS(%)
 
@@ -72,20 +78,25 @@ python evaluation.py
 
 ## Live evaluation of model:
 
-A trained model can be live-tested with sound feedback:
+A trained model can be live-tested with sound feedback when blinking is detected:
 ```
 cd model_training/live_test
 python blink_detection_live_test.py
 ```
 
-![](documentation_images/blink_detection_live_test.png)
+<img src="documentation_images/blink_detection_live_test.png" width="500"/>
 
 
+A live demonstration of the Dlib face and landmark detector:
 ```
 cd model_training/live_test
 python dlib_face_landmark_live_test.py
 ```
 
+
+
 <img src="documentation_images/dlib_face_landmark_live_test.png" width="500"/>
+
+For extraction of the eye regions landmarks 36, 39 and 42, 45 are used:
 
 <img src="documentation_images/Dlib_Face_Landmarks.png" width="500"/>
