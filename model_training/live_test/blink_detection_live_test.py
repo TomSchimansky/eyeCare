@@ -35,7 +35,7 @@ predictor = dlib.shape_predictor("../dlib_models/shape_predictor_68_face_landmar
 
 model = keras.models.load_model("../trained_models/model_32_012-0.989.hdf5")
 
-sound_thread = SoundThread("ding.wav")
+sound_thread = SoundPlayer("ding.wav")
 sound_thread.start()
 
 camera = cv2.VideoCapture(0)
@@ -80,10 +80,9 @@ while True:
 
         out = model.predict(image_batch, batch_size=2, verbose=0)
         if out[0][0] > 0.6 or out[1][0] > 0.6:
-            print(out[0][0], out[1][0])
             sound_thread.play()
 
-        cv2.imshow('Network input: eye_region_1/2', np.hstack((eye_region_1, eye_region_2)))
+        cv2.imshow('blink_detection_live_test.py', np.hstack((eye_region_1, eye_region_2)))
 
         k = cv2.waitKey(30) & 0xff
         if k == 27:

@@ -1,4 +1,3 @@
-import tkinter
 import tkinter.messagebox
 import customtkinter
 import sys
@@ -11,18 +10,15 @@ from app_ui.main_view import MainView
 from app_ui.settings_view import SettingsView
 from app_ui.info_view import InfoView
 
-from app_analyzing.timing import Timer
-from app_analyzing.eye_analyzer import EyeAnalyzer
-from app_analyzing.sound_generator import SoundGenerator
+from app_backend.timing import Timer
+from app_backend.eye_analyzer import EyeAnalyzer
+from app_backend.sound_generator import SoundGenerator
 from settings import Settings
 
 
-class App(tkinter.Tk):
+class App(customtkinter.CTk):
     def __init__(self, *args, **kwargs):
-        customtkinter.deactivate_threading()
-        tkinter.Tk.__init__(self, *args, **kwargs)
-
-        self.color_manager = None
+        customtkinter.CTk.__init__(self, *args, **kwargs)
 
         self.minsize(Settings.MIN_WIDTH, Settings.MIN_HEIGHT)
         self.maxsize(Settings.MAX_WIDTH, Settings.MAX_HEIGHT)
@@ -93,11 +89,14 @@ class App(tkinter.Tk):
     def show_view(self, view_name):
         """ Draw specified view (class-name) and hide all other """
 
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
         for view in self.views:
             if view_name.lower() == view.__class__.__name__.lower():
-                view.place(relx=0, rely=0, relheight=1, relwidth=1)
+                view.grid(row=0, column=0, sticky="nsew")
             else:
-                view.place_forget()
+                view.grid_forget()
 
     @staticmethod
     def about_dialog():
@@ -143,7 +142,6 @@ class App(tkinter.Tk):
                         self.sound_thread.set_volume(self.volume_setting)
 
             self.update()
-            customtkinter.update_theme()
             self.timer.wait()
 
         self.destroy()

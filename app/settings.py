@@ -13,10 +13,10 @@ class Settings:
                 "The camera images don't get not saved to the\nhard drive or get processed in any other\n" +\
                 "way, than running the detection algorithm on them."
 
-    USER_SETTINGS_PATH = MAIN_PATH + "/app_user_settings/user_settings.json"
+    USER_SETTINGS_PATH = MAIN_PATH + "/user_settings.json"
 
-    DEFAULT_WIDTH = 600
-    DEFAULT_HEIGHT = 350
+    DEFAULT_WIDTH = 550
+    DEFAULT_HEIGHT = 340
 
     MIN_WIDTH = DEFAULT_WIDTH
     MIN_HEIGHT = DEFAULT_HEIGHT

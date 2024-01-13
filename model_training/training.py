@@ -5,6 +5,7 @@ from keras.layers import Activation, Dropout, Flatten, Dense
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
 import keras
+from keras_sequential_ascii import keras2ascii
 
 IMAGE_SIZE = 32  # px
 BATCH_SIZE = 16
@@ -67,7 +68,8 @@ model.compile(loss='binary_crossentropy',
                        keras.metrics.Precision(),
                        keras.metrics.Recall()])
 
-model.summary()
+# model.summary()
+keras2ascii(model)
 model.fit(train_data,
           validation_data=validation_data,
           epochs=50,

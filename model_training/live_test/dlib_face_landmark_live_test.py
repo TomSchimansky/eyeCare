@@ -19,10 +19,8 @@ while True:
             x, y = landmarks.part(n).x, landmarks.part(n).y
             cv2.circle(img=image, center=(x, y), radius=3, color=(0, 255, 0), thickness=-1)
 
-    cv2.imshow('dlib Face-Detector', image)
+    cv2.imshow('dlib_face_landmark_live_test.py', image)
 
     k = cv2.waitKey(30) & 0xff
     if k == 27:
         break
-
-

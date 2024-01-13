@@ -11,4 +11,4 @@ was not usefull in this case.
 Run real_testing/dlib_eye_detection.py for demonstration.
 
 ### Dlib_Face_Landmarks:
-![](./Dlib_Face_Landmarks.png)
+![](../documentation_images/Dlib_Face_Landmarks.png)

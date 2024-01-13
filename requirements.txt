@@ -8,3 +8,5 @@ keras
 tensorflow
 dlib
 playsound
+customtkinter==5.2.2
+keras2ascii
