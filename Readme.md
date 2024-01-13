@@ -25,7 +25,20 @@ python app.py
 ```
 
 ## Dataset
-
+For training the classifier a preprocessed version of the mrlEyes_2018_01 dataset is used which can be created using `create_dataset.py`. The script will create
+a new folder called mrlEyes_open_closed with the following structure:
+```
+mrlEyes_open_closed/
+├─ train/
+│  ├─ open
+│  ├─ closed
+├─ valid/
+│  ├─ open
+│  ├─ closed
+├─ test/
+│  ├─ open
+│  ├─ closed
+```
 Download mrlEyes_2018_01 and create mrlEyes_open_closed dataset with images separated into train, vlaid and test folders with open and closed folders each:
 ```
 wget http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
