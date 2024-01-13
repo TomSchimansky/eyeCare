@@ -50,7 +50,7 @@ python create_dataset.py
 
 ## Model training
 
-The following architecture is used to classify 32x32 eye images:
+The following architecture is used to classify 32x32 eye images (eye open: 0, eye closed: 1):
 ```
        OPERATION           DATA DIMENSIONS   WEIGHTS(N)   WEIGHTS(%)
 
