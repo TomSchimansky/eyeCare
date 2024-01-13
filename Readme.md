@@ -1,6 +1,6 @@
 # eyeCare
-<div style="text-align:center">
-<img src="documentation_images/eyeCare_screenshot_1.png" width="600"/>
+<div align="center">
+  <img src="documentation_images/eyeCare_screenshot_1.png" width="600"/>
 </div>
 ## Installation and usage
 
