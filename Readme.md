@@ -110,13 +110,11 @@ python blink_detection_live_test.py
 <img src="documentation_images/blink_detection_live_test.png" width="500"/>
 
 
-A live demonstration of the Dlib face and landmark detector:
+The eye regions are cropped using the Dlib shape_predictor_68_face_landmarks.dat. A live demonstration of the Dlib face and landmark detector:
 ```
 cd model_training/live_test
 python dlib_face_landmark_live_test.py
 ```
-
-
 
 <img src="documentation_images/dlib_face_landmark_live_test.png" width="500"/>
 
