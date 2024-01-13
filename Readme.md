@@ -97,6 +97,7 @@ With above architecture the following metrics can be achieved on the valid datas
      Precision: 97.9 %
         Recall: 98.7 %
 False-Positive: 1.04 %
+False-Negative: 0.64 %
 ```
 
 ## Live evaluation of model:
