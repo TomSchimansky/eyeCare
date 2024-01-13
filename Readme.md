@@ -1,7 +1,7 @@
 # eyeCare
-
-<img src="documentation_images/eyeCare_screenshot_1.png" width="500"/>
-
+<p style="text-align:center;">
+<img src="documentation_images/eyeCare_screenshot_1.png" width="600"/>
+</p>
 ## Installation and usage
 
 Create virtual environment and install libraries:
@@ -86,6 +86,6 @@ cd model_training/live_test
 python dlib_face_landmark_live_test.py
 ```
 
-![](documentation_images/dlib_face_landmark_live_test.png)
+<img src="documentation_images/dlib_face_landmark_live_test.png" width="500"/>
 
 <img src="documentation_images/Dlib_Face_Landmarks.png" width="500"/>
