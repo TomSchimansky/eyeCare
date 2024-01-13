@@ -25,21 +25,21 @@ python app.py
 ```
 
 ## Dataset
-For training the classifier a preprocessed version of the mrlEyes_2018_01 dataset is used which can be created using `create_dataset.py`. The script will create
-a new folder called mrlEyes_open_closed with the following structure:
+For training the classifier, a preprocessed version of the mrlEyes_2018_01 dataset is used, which can be created using `create_dataset.py`. The script will create
+a new folder called mrlEyes_open_closed with train, valid and test folders and images from the mrlEyes_2018_01 resized to 64x64:
 ```
 mrlEyes_open_closed/
-├─ train/
-│  ├─ open
-│  ├─ closed
-├─ valid/
-│  ├─ open
-│  ├─ closed
-├─ test/
-│  ├─ open
-│  ├─ closed
+├── train/
+│   ├── open/ (37753 files)
+│   └── closed/ (37753 files)
+├── valid/
+│   ├── open/ (838 files)
+│   └── closed/ (838 files)
+└── test/
+    ├── open/ (3355 files)
+    └── closed/ (3355 files)
 ```
-Download mrlEyes_2018_01 and create mrlEyes_open_closed dataset with images separated into train, vlaid and test folders with open and closed folders each:
+Download mrlEyes_2018_01 and create mrlEyes_open_closed dataset:
 ```
 wget http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
 unzip mrlEyes_2018_01.zip
@@ -87,9 +87,16 @@ cp best_model.hdf5 ../../app/assets/trained_models
 ```
 (Training takes approximately 15 minutes for 50 epochs on Nvidia RTX3070)
 
-Evaluation on test dataset not used in training process:
+Evaluation on test dataset with images not used in training process:
 ```
 python evaluation.py
+```
+With above architecture the following metrics can be achieved on the valid dataset:
+```
+      Accuracy: 98.3 %
+     Precision: 97.9 %
+        Recall: 98.7 %
+False-Positive: 1.04 %
 ```
 
 ## Live evaluation of model:
