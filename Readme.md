@@ -1,11 +1,14 @@
-# eyeCare
+# eyeCare - Concept
 
 <div align="center">
   <img src="documentation_images/eyeCare_screenshot_1.png" width="600"/>
 </div>
 
-This is a prototype program for tackling the Computer vision syndrome,
-which describes eye problems caused by prolonged screen usage like dry or itchy eyes.
+This is a prototype program for tackling eye strain caused by prolonged screen usage.
+Problems like dry and itchy eyes are partially caused by a reduce blinking rate when staring on a screen,
+which this program tries to address by giving a sound signal when no blinking is detected for a
+certain time. For this, the program uses the webcam, detects the face, crops out the eye regions and runs
+a classifier on the eye regions detecting an open or closed eye.
 
 ## Installation and usage
 
@@ -78,7 +81,7 @@ python evaluation.py
 
 ## Live evaluation of model:
 
-A trained model can be live-tested with sound feedback when blinking is detected:
+A trained model can be live-tested with sound feedback when blinking:
 ```
 cd model_training/live_test
 python blink_detection_live_test.py
