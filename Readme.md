@@ -41,9 +41,9 @@ mrlEyes_open_closed/
 ```
 Download mrlEyes_2018_01 and create mrlEyes_open_closed dataset:
 ```
+cd model_training
 wget http://mrl.cs.vsb.cz/data/eyedataset/mrlEyes_2018_01.zip
 unzip mrlEyes_2018_01.zip
-cd model_training
 python create_dataset.py
 ```
 (Can take a few minutes)
@@ -81,7 +81,7 @@ The following architecture is used to classify 32x32 eye images (eye open: 0, ey
 Train CNN classifier model and copy best model to model_training/trained_models and app/ml_models/tensorflow:
 ```
 python training.py
-cd checkpoints
+cd model_training/checkpoints
 cp best_model.hdf5 ../trained_models
 cp best_model.hdf5 ../../app/assets/trained_models
 ```
@@ -97,6 +97,7 @@ With above architecture the following metrics can be achieved on the valid datas
      Precision: 97.9 %
         Recall: 98.7 %
 False-Positive: 1.04 %
+False-Negative: 0.64 %
 ```
 
 ## Live evaluation of model:
@@ -118,6 +119,6 @@ python dlib_face_landmark_live_test.py
 
 <img src="documentation_images/dlib_face_landmark_live_test.png" width="500"/>
 
-For extraction of the eye regions landmarks 36, 39 and 42, 45 are used:
+For extraction of the eye regions the midpoints of landmarks 36, 39 and 42, 45 are used:
 
 <img src="documentation_images/Dlib_Face_Landmarks.png" width="500"/>
