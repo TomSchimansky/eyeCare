@@ -16,8 +16,10 @@ model = keras.models.load_model("trained_models/model_32_012-0.989.hdf5")
 model.compile(metrics=["accuracy",
                        keras.metrics.Precision(),
                        keras.metrics.Recall(),
-                       keras.metrics.FalsePositives()])
+                       keras.metrics.FalsePositives(),
+                       keras.metrics.FalseNegatives()])
 results = model.evaluate(test_data, batch_size=BATCH_SIZE)
 results_dict = dict(zip(model.metrics_names, results))
 print(results_dict)
 print("false positive rate:", results_dict["false_positives"] / test_data.samples)
+print("false negative rate:", results_dict["false_negatives"] / test_data.samples)
