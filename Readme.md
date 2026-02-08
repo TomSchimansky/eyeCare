@@ -10,6 +10,10 @@ which this program tries to fix by giving a subtle sound signal when no blinking
 certain time. For this, the program uses the webcam, detects the face, crops out the eye regions and runs
 a classifier on the eye regions detecting an open or closed eye in real time.
 
+<div align=center>
+<img width="859" height="607" alt="image" src="https://github.com/user-attachments/assets/6c78ac5a-4164-4327-913c-3b45a6b4ffc9" />
+</div>div
+
 ## Installation and usage
 
 Create virtual environment and install libraries:
